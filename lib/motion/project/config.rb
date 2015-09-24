@@ -134,7 +134,9 @@ module Motion; module Project
     end
 
     def locate_binary(name)
-      [File.join(xcode_dir, 'usr/bin'), '/usr/bin'].each do |dir|
+      paths = [File.join(xcode_dir, 'usr/bin'), '/usr/bin']
+      paths.unshift File.join(xcode_dir, 'Toolchains/XcodeDefault.xctoolchain/usr/bin')
+      paths.each do |dir|
         path = File.join(dir, name)
         return escape_path(path) if File.exist?(path)
       end
