@@ -150,12 +150,12 @@ module Motion; module Project
         "RM_TARGET_HOST_APP_VERSION" => @config.version,
         "RM_TARGET_HOST_APP_SHORT_VERSION" => @config.short_version,
         "RM_TARGET_HOST_APP_IDENTIFIER" => @config.identifier,
-        "RM_TARGET_HOST_APP_SEED_ID" => @config.seed_id,
         "RM_TARGET_HOST_APP_PATH" => File.expand_path(@config.project_dir),
         "RM_TARGET_BUILD" => '1',
         "RM_TARGET_ARCHS" => @config.archs.inspect,
         "RM_TARGET_EMBED_DSYM" => @config.embed_dsym.inspect,
       }
+      env["RM_TARGET_HOST_APP_SEED_ID"] = @config.seed_id if @config.respond_to?(:seed_id)
       env["BUNDLE_GEMFILE"] = gemfile_path if use_gemfile?
       ENV.to_hash.merge(env).merge(@opts[:env] || {})
     end
