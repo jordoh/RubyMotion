@@ -61,8 +61,8 @@ module Motion; module Project
       app_bundle = config.app_bundle(platform)
       framework_versions = 'Frameworks/*.framework/Versions/*'
       Dir.glob(File.join(app_bundle, framework_versions)) do |version|
-        unless version == File.basename('Current')
-          codesign_bundle(config, version, true)
+        unless File.basename(version) == 'Current'
+          codesign_bundle(config, version, false, true)
         end
       end
 
@@ -99,9 +99,9 @@ module Motion; module Project
     #
     # @return [void]
     #
-    def codesign_bundle(config, bundle, deep = false)
+    def codesign_bundle(config, bundle, deep = false, force = false)
       if File.mtime(config.project_file) > File.mtime(bundle) \
-          or !system("/usr/bin/codesign --verify '#{bundle}' >& /dev/null")
+          or (force || !system("/usr/bin/codesign --verify '#{bundle}' >& /dev/null"))
         App.info 'Codesign', bundle
         entitlements_path = yield if block_given?
         command = "/usr/bin/codesign --force --sign '#{config.codesign_certificate}' "
